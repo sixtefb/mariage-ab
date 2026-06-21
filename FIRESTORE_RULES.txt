@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /photos/{doc} {
+      allow read: if true;
+      allow create: if request.resource.data.author is string
+        && request.resource.data.photoUrl is string
+        && request.resource.data.author.size() < 100;
+      allow delete: if false;
+    }
+    match /notes/{doc} {
+      allow create: if request.resource.data.name is string
+        && request.resource.data.note is string
+        && request.resource.data.note.size() < 1000;
+      allow read, delete: if false;
+    }
+  }
+}
